@@ -9,8 +9,7 @@ import os
 # ────────────────────────────────────────────
 #  CONFIGURATION
 # ────────────────────────────────────────────
-import os
-TOKEN = os.getenv("TOKEN")        # Remplace par ton token
+TOKEN = "TON_TOKEN_ICI"          # Remplace par ton token
 PREFIX = "!"                      # Préfixe des commandes
 LOG_CHANNEL_NAME = "logs"         # Nom du salon de logs
 WELCOME_CHANNEL_NAME = "bienvenue"
@@ -55,8 +54,8 @@ async def on_member_join(member: discord.Member):
         embed.set_thumbnail(url=member.display_avatar.url)
         await channel.send(embed=embed)
 
-    # Rôle automatique (ex: "Membre")
-    role = discord.utils.get(guild.roles, name="Membre")
+    # Rôle automatique
+    role = discord.utils.get(guild.roles, name="Faction Roleplayer")
     if role:
         await member.add_roles(role)
         print(f"✅ Rôle 'Membre' attribué à {member}")
@@ -447,17 +446,25 @@ class TicketOpenView(discord.ui.View):
 
         # Message d'accueil dans le ticket
         embed = discord.Embed(
-            title="🎫 Nouveau Ticket",
+            title="🎫 Ticket ouvert — 22 Side Illégal",
             description=(
                 f"Bonjour {author.mention} !\n\n"
-                "Décris ton problème ou ta demande ci-dessous.\n"
-                "L'équipe de support va te répondre dès que possible.\n\n"
-                "Clique sur **🔒 Fermer le ticket** quand le problème est résolu."
+                "Merci de contacter le support de **22 Side Illégal**.\n\n"
+                "📋 **Merci de préciser :**\n"
+                "• Ton nom de personnage In-Game\n"
+                "• Le motif de ta demande\n"
+                "• Les détails de la situation (date, lieu, personnes impliquées)\n\n"
+                "⚠️ Rappel : toute action IC doit être traitée via les leviers internes "
+                "(Justice, Police, Services de Santé).\n\n"
+                "Un membre du staff va prendre en charge ton ticket rapidement.\n"
+                "Clique sur **🔒 Fermer le ticket** une fois ta demande traitée."
             ),
-            color=discord.Color.green(),
+            color=discord.Color.from_rgb(30, 30, 30),
             timestamp=datetime.utcnow()
         )
-        embed.set_footer(text=guild.name)
+        if guild.icon:
+            embed.set_thumbnail(url=guild.icon.url)
+        embed.set_footer(text="Administration Générale — 22 Side Illégal")
         await ticket_channel.send(embed=embed, view=TicketCloseView())
 
         await interaction.response.send_message(
@@ -482,15 +489,23 @@ async def ticket_panel(ctx, channel: discord.TextChannel = None):
     target = channel or ctx.channel
     await ctx.message.delete()
     embed = discord.Embed(
-        title="🎫 Support",
+        title="🎫 Support — 22 Side Illégal",
         description=(
-            "Tu as besoin d'aide ou tu veux contacter l'équipe ?\n\n"
+            "**Bienvenue sur le système de support de 22 Side Illégal.**\n\n"
+            "Tu rencontres un problème en jeu, tu as une question sur le serveur "
+            "ou tu souhaites contacter l'équipe administrative ?\n\n"
+            "📌 **Avant d'ouvrir un ticket :**\n"
+            "• Vérifie que ta demande ne peut pas être traitée In-Character (IC)\n"
+            "• Sois précis et respectueux dans ta demande\n"
+            "• Un seul ticket à la fois par joueur\n\n"
             "Clique sur le bouton ci-dessous pour ouvrir un ticket privé.\n"
-            "Un membre du support te répondra dans les plus brefs délais."
+            "Un membre du staff te répondra dans les plus brefs délais."
         ),
-        color=discord.Color.blurple()
+        color=discord.Color.from_rgb(30, 30, 30)
     )
-    embed.set_footer(text=ctx.guild.name)
+    if ctx.guild.icon:
+        embed.set_thumbnail(url=ctx.guild.icon.url)
+    embed.set_footer(text="Administration Générale — 22 Side Illégal")
     await target.send(embed=embed, view=TicketOpenView())
     await ctx.send(f"✅ Panel ticket envoyé dans {target.mention}.", delete_after=5)
 
