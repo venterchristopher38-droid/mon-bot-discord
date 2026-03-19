@@ -9,7 +9,7 @@ import os
 # ────────────────────────────────────────────
 #  CONFIGURATION
 # ────────────────────────────────────────────
-TOKEN = "TON_TOKEN_ICI"          # Remplace par ton token
+TOKEN = os.getenv("TOKEN")          # Remplace par ton token
 PREFIX = "!"                      # Préfixe des commandes
 LOG_CHANNEL_NAME = "logs"         # Nom du salon de logs
 WELCOME_CHANNEL_NAME = "bienvenue"
